@@ -1,9 +1,33 @@
-import { Container } from './styles'
+import { useTransactions } from '../../hooks/useTransactions'
+
 import icomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
 import total from '../../assets/total.svg'
 
+import { Container } from './styles'
+
 export function Summary(){
+
+  const { transactions } = useTransactions();
+
+  const summary = transactions.reduce((acc, transaction) => {
+    if(transaction.type === 'deposit'){
+      acc.income += transaction.amount;
+      acc.total += transaction.amount;
+    }else{
+      acc.outcome += transaction.amount;
+      acc.total -= transaction.amount;
+    }
+
+    return acc;
+  }, {
+    income: 0,
+    outcome: 0,
+    total: 0,
+  })
+
+  const isTotalNegative = summary.total < 0;
+
   return(
     <Container>
 
@@ -12,7 +36,12 @@ export function Summary(){
           <p>Entradas</p>
           <img src={icomeImg} alt="Entradas" />
         </header>
-        <strong>R$ 1.000,00</strong>
+        <strong>
+          {new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          }).format(summary.income) }  
+        </strong>
       </div>
 
       <div>
@@ -20,16 +49,27 @@ export function Summary(){
           <p>Saídas</p>
           <img src={outcomeImg} alt="Saídas" />
         </header>
-        <strong> - R$ 500,00</strong>
+        <strong> 
+         - 
+         {new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          }).format(summary.outcome) }
+        </strong>
       </div>
 
 
-      <div className='highlith-background'>
+      <div className={isTotalNegative ? 'red-background' : 'highlith-background'}>
         <header>
           <p>Total</p>
           <img src={total} alt="Total" />
         </header>
-        <strong>R$ 500,00</strong>
+        <strong>
+          {new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          }).format(summary.total) }
+        </strong>
       </div>
       
     </Container>

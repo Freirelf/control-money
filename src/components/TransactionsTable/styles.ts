@@ -8,7 +8,7 @@ export const Container = styled.div`
     border-spacing: 0 0.5rem;
 
     th {
-      color: var(--text-body);
+      color: var(--text-title);
       font-weight: 400;
       padding: 1rem 2rem;
       text-align: left;
