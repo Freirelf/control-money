@@ -29,7 +29,7 @@ export function TransactionsProvider({ children }: TransactionProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   
   useEffect(() => {
-    api.get('https://localhost:3000/api/transactions')
+    api.get('/transactions')
       .then(response => setTransactions(response.data.transactions));
   }, []);
 
